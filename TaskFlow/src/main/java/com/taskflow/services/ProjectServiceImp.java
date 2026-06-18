@@ -6,6 +6,8 @@ import com.taskflow.dtos.requests.projects.ProjectDeleteRequest;
 import com.taskflow.dtos.requests.projects.ProjectDetailRequest;
 import com.taskflow.dtos.requests.projects.ProjectUpdateRequest;
 import com.taskflow.dtos.responses.projects.ProjectDetailResponse;
+import com.taskflow.exceptions.InvalidCredentialsException;
+import com.taskflow.exceptions.ProjectNotFoundException;
 import com.taskflow.exceptions.UserNotFoundException;
 import com.taskflow.models.Member;
 import com.taskflow.models.ProjectModel;
@@ -57,22 +59,75 @@ public class ProjectServiceImp implements IProjectService{
     }
 
     @Override
-    public List<ProjectModel> getProjectsByUser(String userId) {
-        return List.of();
+    public List<ProjectDetailResponse> getProjectsByUser(String userId) {
+        Optional<UserModel> userById = userRepository.findById(userId);
+        if (!userById.isPresent()) {
+            throw new UserNotFoundException(userId);
+        }
+        return projectRepository.findProjectsByUserId(userId).stream()
+                .map(p -> ProjectDetailResponse.builder()
+                        .projectId(p.getId())
+                        .name(p.getName())
+                        .description(p.getDescription())
+                        .ownerId(p.getOwnerId())
+                        .status(p.getStatus())
+                        .members(p.getMembers())
+                        .build())
+                .toList();
     }
 
     @Override
-    public ProjectDetailResponse getProjectDetail(String userId, ProjectDetailRequest projectRequest) {
-        return null;
+    public ProjectDetailResponse getProjectDetail(ProjectDetailRequest projectRequest) {
+        Optional<ProjectModel> projectById = projectRepository.findById(projectRequest.getProjectId());
+        if (!projectById.isPresent()) {
+            throw new ProjectNotFoundException(projectRequest.getProjectId());
+        }
+
+        ProjectModel projectExist = projectById.get();
+
+        ProjectDetailResponse ProjectResponse = ProjectDetailResponse.builder()
+                .projectId(projectExist.getId())
+                .name(projectExist.getName())
+                .description(projectExist.getDescription())
+                .ownerId(projectExist.getOwnerId())
+                .status(projectExist.getStatus())
+                .members(projectExist.getMembers())
+                .build();
+
+        return ProjectResponse;
+
     }
 
     @Override
     public void updateProject(String userId, ProjectUpdateRequest projectRequest) {
+        Optional<ProjectModel> projectById = projectRepository.findById(projectRequest.getProjectId());
+        if (!projectById.isPresent()) {
+            throw new ProjectNotFoundException(projectRequest.getProjectId());
+        }
+        ProjectModel projectExist = projectById.get();
 
+        if (!projectExist.getOwnerId().equals(userId)){
+            throw new InvalidCredentialsException("Solo el propietario del proyecto puede actualizarlo. ");
+        }
+
+        projectExist.setName(projectRequest.getName());
+        projectExist.setDescription(projectRequest.getDescription());
+
+        projectRepository.save(projectExist);
     }
 
     @Override
     public void deleteProject(String userId, ProjectDeleteRequest projectRequest) {
+        Optional<ProjectModel> projectById = projectRepository.findById(projectRequest.getProjectId());
+        if (!projectById.isPresent()) {
+            throw new ProjectNotFoundException(projectRequest.getProjectId());
+        }
+        ProjectModel projectExist = projectById.get();
 
+        if (!projectExist.getOwnerId().equals(userId)){
+            throw new InvalidCredentialsException("Solo el propietario del proyecto puede actualizarlo. ");
+        }
+
+        projectRepository.delete(projectExist);
     }
 }

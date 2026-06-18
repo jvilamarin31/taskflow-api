@@ -14,6 +14,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @Builder
 public class ProjectDetailResponse {
+    private String projectId;
     private String name;
     private String description;
     private String ownerId;

@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         .requestMatchers("/api/auth/login","/api/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/invitations/accept","/api/invitations/decline").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

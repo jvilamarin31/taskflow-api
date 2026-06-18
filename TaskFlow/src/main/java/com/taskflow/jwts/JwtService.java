@@ -23,6 +23,9 @@ public class JwtService {
     @Value("${jwt.expiracion}")
     private long expiracionMinutos;
 
+    @Value("${jwt.invitacion.expiracion}")
+    private long invitacionExpiracionMs;
+
 
     private SecretKey getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(llaveScreta);
@@ -42,6 +45,20 @@ public class JwtService {
                 .compact();
     }
 
+    public String getInvitationToken(String invitedEmail, String projectId, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("projectId", projectId);
+        claims.put("role", role);
+
+        return Jwts.builder()
+                .claims(claims)
+                .subject(invitedEmail)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + invitacionExpiracionMs))
+                .signWith(getKey(), Jwts.SIG.HS256)
+                .compact();
+    }
+
     public String getUserIdFromToken(String token) {
         return getClaim(token, Claims::getSubject);
     }
@@ -56,7 +73,15 @@ public class JwtService {
         return (usuarioId.equals(user.getId()) && !isTokenExpired(token));
     }
 
-    private Claims getAllClaims(String token){
+    public boolean isTokenValid(String token) {
+        try {
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Claims getAllClaims(String token){
         return Jwts
                 .parser()
                 .verifyWith(getKey())
