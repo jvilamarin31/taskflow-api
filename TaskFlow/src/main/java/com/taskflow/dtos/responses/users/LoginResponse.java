@@ -1,6 +1,5 @@
-package com.taskflow.models;
+package com.taskflow.dtos.responses.users;
 
-import com.taskflow.models.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Member {
-    private String userId;
-    private RoleEnum role;
+public class LoginResponse {
+    private String token;
 }

@@ -1,23 +1,19 @@
-package com.taskflow.models;
+package com.taskflow.dtos.responses.projects;
 
+import com.taskflow.models.Member;
 import com.taskflow.models.enums.StatusProjectEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 
-@Document("Projects")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectModel {
-    @Id
-    private String id;
+public class ProjectDetailResponse {
     private String name;
     private String description;
     private String ownerId;

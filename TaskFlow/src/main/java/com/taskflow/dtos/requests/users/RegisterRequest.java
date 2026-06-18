@@ -1,21 +1,13 @@
-package com.taskflow.models;
-
+package com.taskflow.dtos.requests.users;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("Users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class UserModel {
-    @Id
-    private String id;
+public class RegisterRequest {
     private String name;
     private String email;
     private String password;
