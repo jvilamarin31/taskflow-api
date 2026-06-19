@@ -7,6 +7,7 @@ import com.taskflow.dtos.responses.users.LoginResponse;
 import com.taskflow.dtos.responses.users.ProfileResponse;
 import com.taskflow.models.UserModel;
 import com.taskflow.services.IAuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,13 +24,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest userRequest){
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest userRequest){
         authService.register(userRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest userRequest){
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest userRequest){
         return ResponseEntity.ok(authService.login(userRequest));
     }
 

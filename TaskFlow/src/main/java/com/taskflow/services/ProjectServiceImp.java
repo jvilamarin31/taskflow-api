@@ -110,8 +110,12 @@ public class ProjectServiceImp implements IProjectService{
             throw new InvalidCredentialsException("Solo el propietario del proyecto puede actualizarlo. ");
         }
 
-        projectExist.setName(projectRequest.getName());
-        projectExist.setDescription(projectRequest.getDescription());
+        if(projectRequest.getName() != null && !projectRequest.getName().isBlank()){
+            projectExist.setName(projectRequest.getName());
+        }
+        if(projectRequest.getDescription() != null && !projectRequest.getDescription().isBlank()){
+            projectExist.setDescription(projectRequest.getDescription());
+        }
 
         projectRepository.save(projectExist);
     }

@@ -7,6 +7,7 @@ import com.taskflow.dtos.requests.projects.ProjectUpdateRequest;
 import com.taskflow.dtos.responses.projects.ProjectDetailResponse;
 import com.taskflow.models.UserModel;
 import com.taskflow.services.IProjectService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +26,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProject(@AuthenticationPrincipal UserModel user, @RequestBody CreateProjectRequest request) {
+    public ResponseEntity<Void> createProject(@AuthenticationPrincipal UserModel user, @RequestBody @Valid CreateProjectRequest request) {
         projectService.createProject(user.getId(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -36,18 +37,18 @@ public class ProjectController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<ProjectDetailResponse> getProjectDetail(@RequestBody ProjectDetailRequest request) {
+    public ResponseEntity<ProjectDetailResponse> getProjectDetail(@RequestBody @Valid ProjectDetailRequest request) {
         return ResponseEntity.ok(projectService.getProjectDetail(request));
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateProject(@AuthenticationPrincipal UserModel user, @RequestBody ProjectUpdateRequest request) {
+    public ResponseEntity<Void> updateProject(@AuthenticationPrincipal UserModel user, @RequestBody @Valid ProjectUpdateRequest request) {
         projectService.updateProject(user.getId(), request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteProject(@AuthenticationPrincipal UserModel user, @RequestBody ProjectDeleteRequest request) {
+    public ResponseEntity<Void> deleteProject(@AuthenticationPrincipal UserModel user, @RequestBody @Valid ProjectDeleteRequest request) {
         projectService.deleteProject(user.getId(), request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

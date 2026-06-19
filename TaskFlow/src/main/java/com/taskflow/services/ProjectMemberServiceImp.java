@@ -88,7 +88,13 @@ public class ProjectMemberServiceImp implements IProjectMemberService{
             throw new InvalidCredentialsException("No se puede cambiar el rol del propietario");
         }
 
-        targetMember.setRole(changeRequest.getRole());
+        RoleEnum memberRole = RoleEnum.valueOf(changeRequest.getRole().toUpperCase());
+
+        if (memberRole == RoleEnum.OWNER) {
+            throw new InvalidCredentialsException("No se puede cambiar el rol de un miembro a OWNER. ");
+        }
+
+        targetMember.setRole(memberRole);
         projectRepository.save(projectExist);
     }
 

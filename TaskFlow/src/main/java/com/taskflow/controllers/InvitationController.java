@@ -3,6 +3,7 @@ package com.taskflow.controllers;
 import com.taskflow.dtos.requests.projectMembers.InviteMemberRequest;
 import com.taskflow.models.UserModel;
 import com.taskflow.services.IInvitationService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class InvitationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> inviteMember(@AuthenticationPrincipal UserModel user, @RequestBody InviteMemberRequest request) {
+    public ResponseEntity<Void> inviteMember(@AuthenticationPrincipal UserModel user, @RequestBody @Valid InviteMemberRequest request) {
         invitationService.inviteMember(user.getId(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
