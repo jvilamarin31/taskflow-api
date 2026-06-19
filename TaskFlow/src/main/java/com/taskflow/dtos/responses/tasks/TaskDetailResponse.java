@@ -1,4 +1,4 @@
-package com.taskflow.models;
+package com.taskflow.dtos.responses.tasks;
 
 import com.taskflow.models.enums.PriorityEnum;
 import com.taskflow.models.enums.StatusTaskEnum;
@@ -6,19 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 
-@Document("Tasks")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TaskModel {
-    @Id
-    private String id;
+public class TaskDetailResponse {
+    private String taskId;
     private String projectId;
     private String title;
     private String description;
