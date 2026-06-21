@@ -1,9 +1,8 @@
 package com.taskflow.services;
 
-import com.taskflow.dtos.requests.tasks.CreateTaskRequest;
-import com.taskflow.dtos.requests.tasks.ListTasksRequest;
-import com.taskflow.dtos.requests.tasks.TaskDetailRequest;
+import com.taskflow.dtos.requests.tasks.*;
 import com.taskflow.dtos.responses.tasks.TaskDetailResponse;
+import com.taskflow.exceptions.InvalidCredentialsException;
 import com.taskflow.exceptions.InvalidInvitationException;
 import com.taskflow.exceptions.ProjectNotFoundException;
 import com.taskflow.exceptions.TaskNotFoundException;
@@ -11,6 +10,7 @@ import com.taskflow.models.Member;
 import com.taskflow.models.ProjectModel;
 import com.taskflow.models.TaskModel;
 import com.taskflow.models.enums.PriorityEnum;
+import com.taskflow.models.enums.RoleEnum;
 import com.taskflow.models.enums.StatusTaskEnum;
 import com.taskflow.repositories.IProjectRepository;
 import com.taskflow.repositories.ITaskRepository;
@@ -165,5 +165,108 @@ public class TaskServiceImp implements ITaskService{
                         .createdAt(t.getCreatedAt())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateTask(String userId, UpdateTaskRequest taskRequest) {
+        Optional<TaskModel> taskById = taskRepository.findById(taskRequest.getTaskId());
+        if (taskById.isPresent()) {
+            throw new TaskNotFoundException(taskRequest.getTaskId());
+        }
+        TaskModel taskExist = taskById.get();
+        Optional<ProjectModel> projectById = projectRepository.findById(taskExist.getProjectId());
+        if (!projectById.isPresent()) {
+            throw new ProjectNotFoundException(taskExist.getProjectId());
+        }
+        ProjectModel projectExist = projectById.get();
+        Member targetMember = projectExist.getMembers().stream()
+                .filter(member -> member.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new InvalidCredentialsException("El usuario " + userId + " no es miembro del proyecto. "));
+
+        if (targetMember.getRole() == RoleEnum.MEMBER ) {
+            if (taskExist.getAssignedTo() != null && !taskExist.getAssignedTo().isEmpty()) {
+                if (!taskExist.getAssignedTo().equals(userId)) {
+                    throw new InvalidCredentialsException("Solo un OWNER/ADMIN o un MEMBER asignado a la tarea puede actualizarla. ");
+                }
+            }
+        }
+
+        if (taskRequest.getTitle() != null && !taskRequest.getTitle().isBlank()) {
+            taskExist.setTitle(taskRequest.getTitle());
+        }
+        if (taskRequest.getDescription() != null && !taskRequest.getDescription().isBlank()) {
+            taskExist.setDescription(taskRequest.getDescription());
+        }
+        if (taskRequest.getStatus() != null && !taskRequest.getStatus().isBlank()) {
+            StatusTaskEnum statusEnum = StatusTaskEnum.valueOf(taskRequest.getStatus());
+            taskExist.setStatus(statusEnum);
+        }
+        if (taskRequest.getPriority() != null && !taskRequest.getPriority().isBlank()) {
+            PriorityEnum priorityEnum = PriorityEnum.valueOf(taskRequest.getPriority());
+            taskExist.setPriority(priorityEnum);
+        }
+        if (taskRequest.getDueDate() != null) {
+            taskExist.setDueDate(taskRequest.getDueDate());
+        }
+
+        taskRepository.save(taskExist);
+
+    }
+
+    @Override
+    public void assignTask(String userId, AssignTaskRequest taskRequest) {
+        Optional<TaskModel> taskById = taskRepository.findById(taskRequest.getTaskId());
+        if (taskById.isPresent()) {
+            throw new TaskNotFoundException(taskRequest.getTaskId());
+        }
+        TaskModel taskExist = taskById.get();
+        Optional<ProjectModel> projectById = projectRepository.findById(taskExist.getProjectId());
+        if (!projectById.isPresent()) {
+            throw new ProjectNotFoundException(taskExist.getProjectId());
+        }
+        ProjectModel projectExist = projectById.get();
+        Member targetMember = projectExist.getMembers().stream()
+                .filter(member -> member.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new InvalidCredentialsException("El usuario " + userId + " no es miembro del proyecto. "));
+
+        if (targetMember.getRole() == RoleEnum.MEMBER ) {
+            throw new InvalidCredentialsException("Solo un OWNER/ADMIN puede asignar una tarea. ");
+        }
+
+        Member assignedMember = projectExist.getMembers().stream()
+                .filter(member -> member.getUserId().equals(taskRequest.getAssignedTo()))
+                .findFirst()
+                .orElseThrow(() -> new InvalidCredentialsException("Él usuario al que se le quiere asignar la tarea no es un miembro del proyecto. "));
+
+        taskExist.setAssignedTo(assignedMember.getUserId());
+
+        taskRepository.save(taskExist);
+
+    }
+
+    @Override
+    public void deleteTask(String userId, DeleteTaskRequest taskRequest) {
+        Optional<TaskModel> taskById = taskRepository.findById(taskRequest.getTaskId());
+        if (taskById.isPresent()) {
+            throw new TaskNotFoundException(taskRequest.getTaskId());
+        }
+        TaskModel taskExist = taskById.get();
+        Optional<ProjectModel> projectById = projectRepository.findById(taskExist.getProjectId());
+        if (!projectById.isPresent()) {
+            throw new ProjectNotFoundException(taskExist.getProjectId());
+        }
+        ProjectModel projectExist = projectById.get();
+        Member targetMember = projectExist.getMembers().stream()
+                .filter(member -> member.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new InvalidCredentialsException("El usuario " + userId + " no es miembro del proyecto. "));
+
+        if (targetMember.getRole() == RoleEnum.MEMBER) {
+            throw new InvalidCredentialsException("Solo un OWNER/ADMIN puede eliminar una tarea.");
+        }
+
+        taskRepository.delete(taskExist);
     }
 }

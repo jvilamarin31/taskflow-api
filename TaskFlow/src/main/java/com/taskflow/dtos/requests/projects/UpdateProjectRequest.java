@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDeleteRequest {
+public class UpdateProjectRequest {
     @Size(max = 50)
     private String projectId;
+    @Size(max = 50)
+    private String name;
+    @Size(max = 200)
+    private String description;
 }

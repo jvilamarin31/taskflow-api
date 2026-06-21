@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDetailRequest {
+public class DetailProjectRequest {
     @Size(max = 50)
     private String projectId;
 }

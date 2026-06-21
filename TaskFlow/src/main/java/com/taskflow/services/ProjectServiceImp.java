@@ -2,9 +2,9 @@ package com.taskflow.services;
 
 
 import com.taskflow.dtos.requests.projects.CreateProjectRequest;
-import com.taskflow.dtos.requests.projects.ProjectDeleteRequest;
-import com.taskflow.dtos.requests.projects.ProjectDetailRequest;
-import com.taskflow.dtos.requests.projects.ProjectUpdateRequest;
+import com.taskflow.dtos.requests.projects.DeleteProjectRequest;
+import com.taskflow.dtos.requests.projects.DetailProjectRequest;
+import com.taskflow.dtos.requests.projects.UpdateProjectRequest;
 import com.taskflow.dtos.responses.projects.ProjectDetailResponse;
 import com.taskflow.exceptions.InvalidCredentialsException;
 import com.taskflow.exceptions.ProjectNotFoundException;
@@ -77,7 +77,7 @@ public class ProjectServiceImp implements IProjectService{
     }
 
     @Override
-    public ProjectDetailResponse getProjectDetail(ProjectDetailRequest projectRequest) {
+    public ProjectDetailResponse getProjectDetail(DetailProjectRequest projectRequest) {
         Optional<ProjectModel> projectById = projectRepository.findById(projectRequest.getProjectId());
         if (!projectById.isPresent()) {
             throw new ProjectNotFoundException(projectRequest.getProjectId());
@@ -99,7 +99,7 @@ public class ProjectServiceImp implements IProjectService{
     }
 
     @Override
-    public void updateProject(String userId, ProjectUpdateRequest projectRequest) {
+    public void updateProject(String userId, UpdateProjectRequest projectRequest) {
         Optional<ProjectModel> projectById = projectRepository.findById(projectRequest.getProjectId());
         if (!projectById.isPresent()) {
             throw new ProjectNotFoundException(projectRequest.getProjectId());
@@ -121,7 +121,7 @@ public class ProjectServiceImp implements IProjectService{
     }
 
     @Override
-    public void deleteProject(String userId, ProjectDeleteRequest projectRequest) {
+    public void deleteProject(String userId, DeleteProjectRequest projectRequest) {
         Optional<ProjectModel> projectById = projectRepository.findById(projectRequest.getProjectId());
         if (!projectById.isPresent()) {
             throw new ProjectNotFoundException(projectRequest.getProjectId());
