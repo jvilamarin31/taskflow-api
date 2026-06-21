@@ -1,6 +1,7 @@
 package com.taskflow.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
@@ -8,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Configuration
 public class ApplicationConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
