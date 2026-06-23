@@ -170,7 +170,7 @@ public class TaskServiceImp implements ITaskService{
     @Override
     public void updateTask(String userId, UpdateTaskRequest taskRequest) {
         Optional<TaskModel> taskById = taskRepository.findById(taskRequest.getTaskId());
-        if (taskById.isPresent()) {
+        if (!taskById.isPresent()) {
             throw new TaskNotFoundException(taskRequest.getTaskId());
         }
         TaskModel taskExist = taskById.get();
@@ -217,7 +217,7 @@ public class TaskServiceImp implements ITaskService{
     @Override
     public void assignTask(String userId, AssignTaskRequest taskRequest) {
         Optional<TaskModel> taskById = taskRepository.findById(taskRequest.getTaskId());
-        if (taskById.isPresent()) {
+        if (!taskById.isPresent()) {
             throw new TaskNotFoundException(taskRequest.getTaskId());
         }
         TaskModel taskExist = taskById.get();
@@ -249,7 +249,7 @@ public class TaskServiceImp implements ITaskService{
     @Override
     public void deleteTask(String userId, DeleteTaskRequest taskRequest) {
         Optional<TaskModel> taskById = taskRepository.findById(taskRequest.getTaskId());
-        if (taskById.isPresent()) {
+        if (!taskById.isPresent()) {
             throw new TaskNotFoundException(taskRequest.getTaskId());
         }
         TaskModel taskExist = taskById.get();

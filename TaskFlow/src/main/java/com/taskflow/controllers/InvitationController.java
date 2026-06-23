@@ -1,6 +1,6 @@
 package com.taskflow.controllers;
 
-import com.taskflow.dtos.requests.projectMembers.InviteMemberRequest;
+import com.taskflow.dtos.requests.Invitations.InviteMemberRequest;
 import com.taskflow.models.UserModel;
 import com.taskflow.services.IInvitationService;
 import jakarta.validation.Valid;

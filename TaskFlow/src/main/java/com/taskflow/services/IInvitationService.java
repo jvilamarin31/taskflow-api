@@ -1,6 +1,6 @@
 package com.taskflow.services;
 
-import com.taskflow.dtos.requests.projectMembers.InviteMemberRequest;
+import com.taskflow.dtos.requests.Invitations.InviteMemberRequest;
 
 public interface IInvitationService {
     void inviteMember(String adminUserId, InviteMemberRequest request);

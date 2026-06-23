@@ -1,6 +1,7 @@
 package com.taskflow.services;
 
 import com.taskflow.dtos.requests.comments.CreateCommentRequest;
+import com.taskflow.dtos.requests.comments.DeleteCommentRequest;
 import com.taskflow.dtos.requests.comments.DetailCommentRequest;
 import com.taskflow.dtos.requests.comments.ListCommentsRequest;
 import com.taskflow.dtos.responses.comments.DetailCommentResponse;
@@ -12,6 +13,7 @@ import com.taskflow.models.CommentModel;
 import com.taskflow.models.Member;
 import com.taskflow.models.ProjectModel;
 import com.taskflow.models.TaskModel;
+import com.taskflow.models.enums.RoleEnum;
 import com.taskflow.repositories.ICommentRepository;
 import com.taskflow.repositories.IProjectRepository;
 import com.taskflow.repositories.ITaskRepository;
@@ -133,5 +135,37 @@ public class CommentServiceImp implements ICommentService{
                         .createdAt(comment.getCreatedAt())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void DeleteComment(String userId, DeleteCommentRequest commentRequest) {
+        Optional<CommentModel> commentById = commentRepository.findById(commentRequest.getCommentId());
+        if(!commentById.isPresent()){
+            throw new CommentNotFoundException(commentRequest.getCommentId());
+        }
+        CommentModel commentExist = commentById.get();
+        Optional<TaskModel> taskById = taskRepository.findById(commentExist.getTaskId());
+        if(!taskById.isPresent()){
+            throw new TaskNotFoundException(commentExist.getTaskId());
+        }
+
+        TaskModel taskExist = taskById.get();
+
+        Optional<ProjectModel> projectById = projectRepository.findById(taskExist.getProjectId());
+        if(!projectById.isPresent()){
+            throw new ProjectNotFoundException(taskExist.getProjectId());
+        }
+        ProjectModel projectExist = projectById.get();
+
+        Member targetMember = projectExist.getMembers().stream()
+                .filter(member -> member.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new InvalidCredentialsException("El usuario " + userId + " no hace parte del proyecto. "));
+
+        if ((userId != commentExist.getAuthorId())&&(targetMember.getRole() == RoleEnum.ADMIN)) {
+            throw new InvalidCredentialsException("Solo el creador del comentario o un ADMIN/OWNER puede eliminar el comentario");
+        }
+
+        commentRepository.delete(commentExist);
     }
 }

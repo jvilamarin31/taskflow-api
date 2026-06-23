@@ -1,6 +1,6 @@
 package com.taskflow.services;
 
-import com.taskflow.dtos.requests.projectMembers.InviteMemberRequest;
+import com.taskflow.dtos.requests.Invitations.InviteMemberRequest;
 import com.taskflow.exceptions.InvalidCredentialsException;
 import com.taskflow.exceptions.InvalidInvitationException;
 import com.taskflow.exceptions.ProjectNotFoundException;

@@ -1,4 +1,4 @@
-package com.taskflow.dtos.requests.projectMembers;
+package com.taskflow.dtos.requests.Invitations;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

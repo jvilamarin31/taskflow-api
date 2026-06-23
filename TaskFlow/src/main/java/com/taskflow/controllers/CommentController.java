@@ -1,6 +1,7 @@
 package com.taskflow.controllers;
 
 import com.taskflow.dtos.requests.comments.CreateCommentRequest;
+import com.taskflow.dtos.requests.comments.DeleteCommentRequest;
 import com.taskflow.dtos.requests.comments.DetailCommentRequest;
 import com.taskflow.dtos.requests.comments.ListCommentsRequest;
 import com.taskflow.dtos.responses.comments.DetailCommentResponse;
@@ -38,5 +39,11 @@ public class CommentController {
     @GetMapping
     public ResponseEntity<List<DetailCommentResponse>> getComments(@AuthenticationPrincipal UserModel user, @RequestBody @Valid ListCommentsRequest request) {
         return ResponseEntity.ok(commentService.getComments(user.getId(), request));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> DeleteComment(@AuthenticationPrincipal UserModel user, @RequestBody @Valid DeleteCommentRequest commentRequest) {
+        commentService.DeleteComment(user.getId(), commentRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
