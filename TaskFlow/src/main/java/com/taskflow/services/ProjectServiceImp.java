@@ -129,7 +129,7 @@ public class ProjectServiceImp implements IProjectService{
         ProjectModel projectExist = projectById.get();
 
         if (!projectExist.getOwnerId().equals(userId)){
-            throw new InvalidCredentialsException("Solo el propietario del proyecto puede actualizarlo. ");
+            throw new InvalidCredentialsException("Solo el propietario del proyecto puede eliminarlo. ");
         }
 
         projectRepository.delete(projectExist);

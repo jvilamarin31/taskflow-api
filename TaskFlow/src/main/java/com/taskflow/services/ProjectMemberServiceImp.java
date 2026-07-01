@@ -100,20 +100,23 @@ public class ProjectMemberServiceImp implements IProjectMemberService{
 
     @Override
     public void deleteMember(String userId, DeleteMemberRequest deleteRequest) {
-        ProjectModel project = projectRepository.findById(deleteRequest.getProjectId())
-                .orElseThrow(() -> new ProjectNotFoundException(deleteRequest.getProjectId()));
+        Optional<ProjectModel> projectById = projectRepository.findById(deleteRequest.getProjectId());
+        if (!projectById.isPresent()) {
+            throw new ProjectNotFoundException(deleteRequest.getProjectId());
+        }
+        ProjectModel projectExist = projectById.get();
 
-        Member requester = project.getMembers().stream()
+        Member requester = projectExist.getMembers().stream()
                 .filter(m -> m.getUserId().equals(userId))
                 .findFirst()
                 .orElseThrow(() -> new InvalidCredentialsException("No eres miembro del proyecto"));
 
-        Member target = project.getMembers().stream()
+        Member target = projectExist.getMembers().stream()
                 .filter(m -> m.getUserId().equals(deleteRequest.getMemberId()))
                 .findFirst()
                 .orElseThrow(() -> new InvalidCredentialsException("El usuario no es miembro del proyecto"));
 
-        if (project.getOwnerId().equals(deleteRequest.getMemberId())) {
+        if (projectExist.getOwnerId().equals(deleteRequest.getMemberId())) {
             throw new InvalidCredentialsException("No se puede eliminar al propietario del proyecto");
         }
 
@@ -125,8 +128,8 @@ public class ProjectMemberServiceImp implements IProjectMemberService{
             throw new InvalidCredentialsException("No tienes permisos para eliminar miembros");
         }
 
-        project.getMembers().remove(target);
-        projectRepository.save(project);
+        projectExist.getMembers().remove(target);
+        projectRepository.save(projectExist);
     }
 
 

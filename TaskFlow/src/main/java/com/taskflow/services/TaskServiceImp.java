@@ -14,7 +14,6 @@ import com.taskflow.models.enums.RoleEnum;
 import com.taskflow.models.enums.StatusTaskEnum;
 import com.taskflow.repositories.IProjectRepository;
 import com.taskflow.repositories.ITaskRepository;
-import com.taskflow.repositories.IUserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,13 +28,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImp implements ITaskService{
-    private final IUserRepository userRepository;
     private final IProjectRepository projectRepository;
     private final ITaskRepository taskRepository;
     private final MongoTemplate mongoTemplate;
 
-    public TaskServiceImp(IUserRepository userRepository, IProjectRepository projectRepository, ITaskRepository taskRepository, MongoTemplate mongoTemplate) {
-        this.userRepository = userRepository;
+    public TaskServiceImp(IProjectRepository projectRepository, ITaskRepository taskRepository, MongoTemplate mongoTemplate) {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
         this.mongoTemplate = mongoTemplate;
@@ -52,7 +49,7 @@ public class TaskServiceImp implements ITaskService{
         Member targetMember = projectExist.getMembers().stream()
                 .filter(member -> member.getUserId().equals(userId))
                 .findFirst()
-                .orElseThrow(() -> new InvalidInvitationException("El usuario " + userId + " no es miembro del proyecto. "));
+                .orElseThrow(() -> new InvalidCredentialsException("El usuario " + userId + " no es miembro del proyecto. "));
 
         PriorityEnum priorityEnum = PriorityEnum.valueOf(taskRequest.getPriority());
 
@@ -93,7 +90,7 @@ public class TaskServiceImp implements ITaskService{
         Member targetMember = projectExist.getMembers().stream()
                 .filter(member -> member.getUserId().equals(userId))
                 .findFirst()
-                .orElseThrow(() -> new InvalidInvitationException("El usuario " + userId + " no es miembro del proyecto. "));
+                .orElseThrow(() -> new InvalidCredentialsException("El usuario " + userId + " no es miembro del proyecto. "));
 
         TaskDetailResponse taskResponse = TaskDetailResponse.builder()
                 .taskId(taskExist.getId())
@@ -124,7 +121,7 @@ public class TaskServiceImp implements ITaskService{
         boolean isMember = project.getMembers().stream()
                 .anyMatch(m -> m.getUserId().equals(userId));
         if (!isMember) {
-            throw new InvalidInvitationException("El usuario " + userId + " no es miembro del proyecto.");
+            throw new InvalidCredentialsException("El usuario " + userId + " no es miembro del proyecto.");
         }
 
         Criteria criteria = Criteria.where("projectId").is(request.getProjectId());

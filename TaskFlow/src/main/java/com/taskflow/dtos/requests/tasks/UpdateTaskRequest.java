@@ -27,7 +27,7 @@ public class UpdateTaskRequest {
     private String description;
     @Size(max = 50)
     @Pattern(
-            regexp = "^(TO_DO|IN_PROGRES|BLOCKED|DONE)$",
+            regexp = "^(TO_DO|IN_PROGRESS|BLOCKED|DONE)$",
             message = "Estado no valido. Valores permitidos: TO_DO, IN_PROGRESS, BLOCKED, DONE"
     )
     private String status;

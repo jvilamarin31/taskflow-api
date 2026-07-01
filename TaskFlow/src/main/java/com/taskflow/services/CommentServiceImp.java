@@ -162,7 +162,7 @@ public class CommentServiceImp implements ICommentService{
                 .findFirst()
                 .orElseThrow(() -> new InvalidCredentialsException("El usuario " + userId + " no hace parte del proyecto. "));
 
-        if ((userId != commentExist.getAuthorId())&&(targetMember.getRole() == RoleEnum.ADMIN)) {
+        if (!userId.equals(commentExist.getAuthorId()) && targetMember.getRole() != RoleEnum.ADMIN && targetMember.getRole() != RoleEnum.OWNER) {
             throw new InvalidCredentialsException("Solo el creador del comentario o un ADMIN/OWNER puede eliminar el comentario");
         }
 
