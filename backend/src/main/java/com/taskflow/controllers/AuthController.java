@@ -4,13 +4,10 @@ package com.taskflow.controllers;
 import com.taskflow.dtos.requests.users.LoginRequest;
 import com.taskflow.dtos.requests.users.RegisterRequest;
 import com.taskflow.dtos.responses.users.LoginResponse;
-import com.taskflow.dtos.responses.users.ProfileResponse;
-import com.taskflow.models.UserModel;
 import com.taskflow.services.IAuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
