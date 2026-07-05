@@ -124,7 +124,6 @@ public class AuthServiceImpTest {
         request.setEmail(email);
         request.setPassword("12345");
 
-        UserModel userExist = createUser();
         when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
 
         //When y Then

@@ -1,7 +1,6 @@
 package com.taskflow.dtos.requests.tasks;
 
-import com.taskflow.models.enums.PriorityEnum;
-import com.taskflow.models.enums.StatusTaskEnum;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
