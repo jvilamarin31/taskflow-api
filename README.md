@@ -557,6 +557,13 @@ taskflow-api/
 ├── LICENSE
 ├── database/
 │   └── init.js                    # Script de inicialización de MongoDB
+├── docs/
+│   ├── diagrams/
+│   │   ├── DiagramaContexto.drawio       # C4 - Nivel 1: Contexto
+│   │   ├── DiagramaContenedor.drawio     # C4 - Nivel 2: Contenedores
+│   │   └── DiagramaComponente.drawio     # C4 - Nivel 3: Componentes
+│   └── requirements/
+│       └── Documentacion_TaskFlow.docx   # Épicas y user stories
 ├── postman/
 │   └── TaskFlow-API.postman_collection.json
 ├── backend/
@@ -586,6 +593,27 @@ taskflow-api/
 │           ├── TaskFlowApplicationTests.java
 │           └── services/             # Tests unitarios de servicios
 ```
+
+## Documentación
+
+La documentación del proyecto se encuentra en la carpeta `docs/`.
+
+### Diagramas C4 (`docs/diagrams/`)
+
+Archivos en formato Draw.io (`.drawio`). Puedes abrirlos con:
+
+- [draw.io](https://app.diagrams.net) (versión web, importando el archivo)
+- VS Code con la extensión **Draw.io Integration**
+
+| Diagrama | Nivel | Descripción |
+|---|---|---|
+| `DiagramaContexto.drawio` | 1 - Contexto | Visión general del sistema y sus actores |
+| `DiagramaContenedor.drawio` | 2 - Contenedores | Frontend, backend y base de datos |
+| `DiagramaComponente.drawio` | 3 - Componentes | Componentes internos del backend por dominio |
+
+### Requisitos (`docs/requirements/`)
+
+- `Documentacion_TaskFlow.docx` — Documento de Word con las épicas y user stories del proyecto.
 
 ## Frontend (próximamente)
 
